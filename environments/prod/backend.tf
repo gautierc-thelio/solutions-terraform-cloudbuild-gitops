@@ -15,7 +15,7 @@
 
 terraform {
   backend "gcs" {
-    bucket = "PROJECT_ID-tfstate"
+    bucket = "thelio-sandbox-dap-demo-tfstate"
     prefix = "env/prod"
   }
 }
