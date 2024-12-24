@@ -44,7 +44,9 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 Connect cloud build to Git Hub repository
 ![github-cloud_build-app](images/github-cloud_build-app.png "Cloud build app for GitHub")
 
-Follow the instructions to connect to GitHub. Don't use your personnal account.
+Follow the instructions to connect to GitHub. 
+  - Don't use your personnal account unless for dev/demo
+  - Depending of the selected region, you may reach IAM Quota limits. Choose europe-west1 or request for a quota update.
 ![Cloud build repository](images/cloud_build-repo.png "Cloud build repository")
 
 Authorize the service account to run Cloud Build 
