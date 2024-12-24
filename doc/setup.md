@@ -1,14 +1,15 @@
 
 
 # Setup local environment
-- IInstall [Terraform installation steps](https://developer.hashicorp.com/terraform/tutorials/docker-get-started/install-cli#install-terraform).
-
+- Install [Terraform installation steps](https://developer.hashicorp.com/terraform/tutorials/docker-get-started/install-cli#install-terraform).
 - Install [Docker](https://docs.docker.com/get-started/introduction/get-docker-desktop/).
 
 
 # Setup GCP project
 
 Create a GCP project with billing enabled
+
+Follow the [setup steps ](https://cloud.google.com/docs/terraform/resource-management/managing-infrastructure-as-code#prerequisites)
 
 Clone git repo with template terraform modules
 ```bash
@@ -35,11 +36,22 @@ CLOUDBUILD_SA="service-$(gcloud projects describe $PROJECT_ID \
     --format 'value(projectNumber)')@gcp-sa-cloudbuild.iam.gserviceaccount.com"
 ```
 
-Grant Project Editor Role (not recommended for production)
+Grant Project Editor Role (not recommended for production) and logWriter role.
 ```bash
 gcloud projects add-iam-policy-binding $PROJECT_ID \           
-    --member serviceAccount:$CLOUDBUILD_SA --role roles/editor
+    --member serviceAccount:$CLOUDBUILD_SA --roles roles/editor roles/logging.logWriter --condition None
 ```
+
+Retieve default Compute service account used for cloud build and provide the required roles to write logs and 
+```bash
+COMPUTE_SA="$(gcloud projects describe $PROJECT_ID \
+    --format 'value(projectNumber)')-compute@developer.gserviceaccount.com"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$COMPUTE_SA --role roles/logging.logWriter --condition None
+
+gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$COMPUTE_SA --role roles/storage.objectUser --condition None
+```
+
 
 Connect cloud build to Git Hub repository
 ![github-cloud_build-app](images/github-cloud_build-app.png "Cloud build app for GitHub")
