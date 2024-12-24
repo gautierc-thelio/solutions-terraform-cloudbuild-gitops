@@ -28,7 +28,17 @@ gcloud storage buckets update gs://${PROJECT_ID}-tfstate --versioning
 ```
 
 Enable Cloud Build API in console
+```bash 
+gcloud services enable cloudbuild.googleapis.com
+```
 Enable Secret Manager API in console
+```bash 
+gcloud services enable secretmanager.googleapis.com
+```
+Enable Compute Engine API
+```bash 
+gcloud services enable compute.googleapis.com
+```
 
 Retieve dafault service account for cloud build
 ```bash
@@ -39,7 +49,7 @@ CLOUDBUILD_SA="service-$(gcloud projects describe $PROJECT_ID \
 Grant Project Editor Role (not recommended for production) and logWriter role.
 ```bash
 gcloud projects add-iam-policy-binding $PROJECT_ID \           
-    --member serviceAccount:$CLOUDBUILD_SA --roles roles/editor roles/logging.logWriter --condition None
+    --member serviceAccount:$CLOUDBUILD_SA --roles roles/editor --condition None
 ```
 
 Retieve default Compute service account used for cloud build and provide the required roles to write logs and 
@@ -50,6 +60,8 @@ COMPUTE_SA="$(gcloud projects describe $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$COMPUTE_SA --role roles/logging.logWriter --condition None
 
 gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$COMPUTE_SA --role roles/storage.objectUser --condition None
+
+gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$COMPUTE_SA --role roles/compute.networkAdmin --condition None
 ```
 
 
